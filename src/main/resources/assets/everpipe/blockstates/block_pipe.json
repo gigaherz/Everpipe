@@ -1,9 +1,14 @@
 {
   "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "particle": "blocks/hopper_outside"
+    },
+    "transform": "forge:default-block"
+  },
   "variants": {
     "inventory": [{
-      "model": "everpipe:pipe_item.obj",
-      "transform": "forge:default-block"
+      "model": "everpipe:pipe_item.obj"
     }],
     "normal": [{
       "model": "everpipe:custom/pipe"

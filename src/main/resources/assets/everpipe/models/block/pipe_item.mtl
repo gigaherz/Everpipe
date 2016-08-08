@@ -4,7 +4,6 @@ Kd 0.0000 0.4980 0.0000
 
 newmtl New material 002
 Kd 0.0000 0.0000 1.0000
-Ns 0
 
 newmtl New material 001
 Kd 0.4118 0.4118 0.4118
@@ -23,3 +22,4 @@ Kd 0.6392 0.0157 0.0157
 
 newmtl New material 007
 Kd 0.2471 0.7490 0.7490
+

@@ -2,19 +2,30 @@ package gigaherz.everpipe.pipe;
 
 import gigaherz.everpipe.Everpipe;
 import gigaherz.everpipe.common.BlockRegistered;
+import gigaherz.everpipe.pipe.connectors.Connector;
+import gigaherz.everpipe.pipe.connectors.ConnectorStateData;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+
+import javax.annotation.Nullable;
 
 public class BlockPipe extends BlockRegistered
 {
@@ -26,6 +37,14 @@ public class BlockPipe extends BlockRegistered
     public static final PropertyBool EAST = PropertyBool.create("east");
     public static final PropertyBool UP = PropertyBool.create("up");
     public static final PropertyBool DOWN = PropertyBool.create("down");
+
+    public static final IUnlistedProperty<ConnectorStateData> CONNECTORS = new IUnlistedProperty<ConnectorStateData>()
+    {
+        public String getName() { return Everpipe.location("connectors_property").toString(); }
+        public boolean isValid(ConnectorStateData state) { return true; }
+        public Class<ConnectorStateData> getType() { return ConnectorStateData.class; }
+        public String valueToString(ConnectorStateData state) { return state.toString(); }
+    };
 
     public BlockPipe(String name)
     {
@@ -43,6 +62,7 @@ public class BlockPipe extends BlockRegistered
         setResistance(8.0F);
     }
 
+    @Deprecated
     @Override
     public boolean isFullBlock(IBlockState state)
     {
@@ -108,6 +128,21 @@ public class BlockPipe extends BlockRegistered
         return getDefaultState();
     }
 
+    @Override
+    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
+    {
+        IExtendedBlockState augmented = (IExtendedBlockState)super.getExtendedState(state, world, pos);
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof TilePipe)
+        {
+            TilePipe pipe = (TilePipe)te;
+
+            augmented = augmented.withProperty(CONNECTORS, pipe.getConnectors());
+        }
+
+        return augmented;
+    }
+
     @Deprecated
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
@@ -131,7 +166,7 @@ public class BlockPipe extends BlockRegistered
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+        return new ExtendedBlockState(this, new IProperty[]{NORTH, SOUTH, WEST, EAST, UP, DOWN}, new IUnlistedProperty[]{CONNECTORS});
     }
 
     @Deprecated
@@ -142,6 +177,24 @@ public class BlockPipe extends BlockRegistered
         TileEntity te = worldIn.getTileEntity(pos);
         if (te != null)
             te.markDirty();
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TilePipe)
+        {
+            TilePipe pipe = (TilePipe)te;
+
+            if (pipe.addConnector(side, new Connector()))
+            {
+                worldIn.notifyBlockUpdate(pos, state, state, 3);
+            }
+
+            return true;
+        }
+        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
     }
 
     /*@Override
