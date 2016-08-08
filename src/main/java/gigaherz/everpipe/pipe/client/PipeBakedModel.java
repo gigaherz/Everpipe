@@ -27,17 +27,10 @@ import java.util.List;
 
 public class PipeBakedModel implements IBakedModel
 {
-    public static final ResourceLocation FAKE_LOCATION = Everpipe.location("models/block/custom/pipe");
+    public static final ResourceLocation FAKE_LOCATION = Everpipe.location("models/block/custom/pipe_additions");
     public static final ResourceLocation PIPE_CORE = Everpipe.location("block/pipe_core.obj");
-    public static final ResourceLocation PIPE_SIDE = Everpipe.location("block/pipe_side.obj");
 
     private final ModelHandle handle_core = ModelHandle.of(PIPE_CORE);
-    private final ModelHandle handle_side_u = ModelHandle.of(PIPE_SIDE).state("u", new TRSRTransformation(ModelRotation.getModelRotation(90, 0)));
-    private final ModelHandle handle_side_d = ModelHandle.of(PIPE_SIDE).state("d", new TRSRTransformation(ModelRotation.getModelRotation(270, 0)));
-    private final ModelHandle handle_side_e = ModelHandle.of(PIPE_SIDE).state("e", new TRSRTransformation(ModelRotation.getModelRotation(0, 270)));
-    private final ModelHandle handle_side_w = ModelHandle.of(PIPE_SIDE).state("w", new TRSRTransformation(ModelRotation.getModelRotation(0, 90)));
-    private final ModelHandle handle_side_n = ModelHandle.of(PIPE_SIDE).state("n", new TRSRTransformation(ModelRotation.getModelRotation(0, 180)));
-    private final ModelHandle handle_side_s = ModelHandle.of(PIPE_SIDE);
 
     private final TextureAtlasSprite particle;
 
@@ -52,15 +45,6 @@ public class PipeBakedModel implements IBakedModel
         List<BakedQuad> quads = Lists.newArrayList();
 
         quads.addAll(handle_core.get().getQuads(state, side, rand));
-        if(state != null)
-        {
-            if (state.getValue(BlockPipe.UP)) quads.addAll(handle_side_u.get().getQuads(state, side, rand));
-            if (state.getValue(BlockPipe.DOWN)) quads.addAll(handle_side_d.get().getQuads(state, side, rand));
-            if (state.getValue(BlockPipe.EAST)) quads.addAll(handle_side_e.get().getQuads(state, side, rand));
-            if (state.getValue(BlockPipe.WEST)) quads.addAll(handle_side_w.get().getQuads(state, side, rand));
-            if (state.getValue(BlockPipe.NORTH)) quads.addAll(handle_side_n.get().getQuads(state, side, rand));
-            if (state.getValue(BlockPipe.SOUTH)) quads.addAll(handle_side_s.get().getQuads(state, side, rand));
-        }
 
         // TODO: Show connected interfaces
 
@@ -124,7 +108,6 @@ public class PipeBakedModel implements IBakedModel
         {
             List<ResourceLocation> dependencies = Lists.newArrayList();
             dependencies.add(PIPE_CORE);
-            dependencies.add(PIPE_SIDE);
             return dependencies;
         }
 

@@ -22,7 +22,7 @@ public class ClientProxy implements IModProxy
         OBJLoader.INSTANCE.addDomain(Everpipe.MODID);
 
         ModelLoaderRegistry.registerLoader(new PipeBakedModel.ModelLoader());
-        ModelLoader.setCustomStateMapper(Everpipe.pipe, new PipeBakedModel.Statemapper());
+        //ModelLoader.setCustomStateMapper(Everpipe.pipe, new PipeBakedModel.Statemapper());
 
         registerBlockModelAsItem(Everpipe.pipe);
     }
