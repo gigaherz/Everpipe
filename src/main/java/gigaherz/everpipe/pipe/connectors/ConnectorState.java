@@ -1,6 +1,6 @@
 package gigaherz.everpipe.pipe.connectors;
 
 
-public class ConnectorState
+public abstract class ConnectorState
 {
 }

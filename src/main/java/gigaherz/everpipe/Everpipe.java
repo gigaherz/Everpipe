@@ -8,6 +8,7 @@ import gigaherz.everpipe.common.IModProxy;
 import gigaherz.everpipe.network.UpdateField;
 import gigaherz.everpipe.pipe.BlockPipe;
 import gigaherz.everpipe.pipe.TilePipe;
+import gigaherz.everpipe.pipe.connectors.items.ItemHandlerConnector;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -67,6 +68,8 @@ public class Everpipe
         GameRegistry.register(pipe);
         GameRegistry.register(pipe.createItemBlock());
         GameRegistry.registerTileEntity(TilePipe.class, "tileEverpipe");
+
+        GameRegistry.register(new ItemHandlerConnector.Handler());
 
         channel = NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL);
 

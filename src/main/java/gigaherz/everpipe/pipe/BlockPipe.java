@@ -3,7 +3,9 @@ package gigaherz.everpipe.pipe;
 import gigaherz.everpipe.Everpipe;
 import gigaherz.everpipe.common.BlockRegistered;
 import gigaherz.everpipe.pipe.connectors.Connector;
+import gigaherz.everpipe.pipe.connectors.ConnectorHandler;
 import gigaherz.everpipe.pipe.connectors.ConnectorStateData;
+import gigaherz.everpipe.pipe.connectors.items.ItemHandlerConnector;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -187,7 +189,7 @@ public class BlockPipe extends BlockRegistered
         {
             TilePipe pipe = (TilePipe)te;
 
-            if (pipe.addConnector(side, new Connector()))
+            if (pipe.addConnector(side, ConnectorHandler.REGISTRY.getValue(ItemHandlerConnector.KEY).createInstance()))
             {
                 worldIn.notifyBlockUpdate(pos, state, state, 3);
             }
@@ -197,23 +199,23 @@ public class BlockPipe extends BlockRegistered
         return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
     }
 
-    /*@Override
+    @Override
     public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
     {
         super.onNeighborChange(world, pos, neighbor);
         if (isUpdateSource(world, pos, fromNeighbour(pos, neighbor)))
-            ((TileProxy) world.getTileEntity(pos)).broadcastDirty();
+            ((TilePipe) world.getTileEntity(pos)).broadcastDirty();
     }
 
     private boolean isUpdateSource(IBlockAccess worldIn, BlockPos pos, EnumFacing facing)
     {
-        TileEntity te = worldIn.getTileEntity(pos.offset(facing));
-        return AutomationHelper.isAutomatable(te, facing.getOpposite());
+        //TileEntity te = worldIn.getTileEntity(pos.offset(facing));
+        return false; //isAutomatable(te, facing.getOpposite());
     }
 
     private EnumFacing fromNeighbour(BlockPos a, BlockPos b)
     {
         BlockPos diff = b.subtract(a);
         return EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ());
-    }*/
+    }
 }
