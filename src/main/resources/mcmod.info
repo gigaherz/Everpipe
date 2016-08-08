@@ -1,0 +1,16 @@
+[
+{
+  "modid": "everpipe",
+  "name": "Everpipe",
+  "description": "The Ultimate Connectivity Solution",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/gigaherz/Everpipe/",
+  "updateUrl": "",
+  "authorList": ["gigaherz"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

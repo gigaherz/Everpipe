@@ -1,0 +1,81 @@
+
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "everpipe:pipe_core.obj"
+  },
+  "variants": {
+    "inventory": [{"transform": "forge:default-block"}],
+    "up": {
+      "false": {
+      },
+      "true": {
+        "submodel": {
+          "up": {
+            "model": "everpipe:pipe_side.obj",
+            "x": 90
+          }
+        }
+      }
+    },
+    "down": {
+      "false": {
+      },
+      "true": {
+        "submodel": {
+          "down": {
+            "model": "everpipe:pipe_side.obj",
+            "x": 270
+          }
+        }
+      }
+    },
+    "east": {
+      "false": {
+      },
+      "true": {
+        "submodel": {
+          "east": {
+            "model": "everpipe:pipe_side.obj",
+            "y": 270
+          }
+        }
+      }
+    },
+    "west": {
+      "false": {
+      },
+      "true": {
+        "submodel": {
+          "west": {
+            "model": "everpipe:pipe_side.obj",
+            "y": 90
+          }
+        }
+      }
+    },
+    "north": {
+      "false": {
+      },
+      "true": {
+        "submodel": {
+          "north": {
+            "model": "everpipe:pipe_side.obj",
+            "y": 180
+          }
+        }
+      }
+    },
+    "south": {
+      "false": {
+      },
+      "true": {
+        "submodel": {
+          "south": {
+            "model": "everpipe:pipe_side.obj"
+          }
+        }
+      }
+    }
+  }
+}
