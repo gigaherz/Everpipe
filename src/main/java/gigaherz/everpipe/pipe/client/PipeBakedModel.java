@@ -21,16 +21,75 @@ import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
 import javax.annotation.Nullable;
+import javax.vecmath.Vector3f;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class PipeBakedModel implements IBakedModel
 {
-    public static final ResourceLocation FAKE_LOCATION = Everpipe.location("models/block/custom/pipe_additions");
+    public static final ResourceLocation FAKE_LOCATION = Everpipe.location("models/block/custom/pipe");
     public static final ResourceLocation PIPE_CORE = Everpipe.location("block/pipe_core.obj");
+    public static final ResourceLocation PIPE_SIDE = Everpipe.location("block/pipe_side.obj");
+    public static final ResourceLocation PIPE_CONNECTOR = Everpipe.location("block/pipe_connector.obj");
 
     private final ModelHandle handle_core = ModelHandle.of(PIPE_CORE);
+    private final ModelHandle handle_side_u = ModelHandle.of(PIPE_SIDE).state("u", new TRSRTransformation(ModelRotation.getModelRotation(90, 0)));
+    private final ModelHandle handle_side_d = ModelHandle.of(PIPE_SIDE).state("d", new TRSRTransformation(ModelRotation.getModelRotation(270, 0)));
+    private final ModelHandle handle_side_e = ModelHandle.of(PIPE_SIDE).state("e", new TRSRTransformation(ModelRotation.getModelRotation(0, 270)));
+    private final ModelHandle handle_side_w = ModelHandle.of(PIPE_SIDE).state("w", new TRSRTransformation(ModelRotation.getModelRotation(0, 90)));
+    private final ModelHandle handle_side_n = ModelHandle.of(PIPE_SIDE).state("n", new TRSRTransformation(ModelRotation.getModelRotation(0, 180)));
+    private final ModelHandle handle_side_s = ModelHandle.of(PIPE_SIDE);
+
+    private final TRSRTransformation base_rotation_u = new TRSRTransformation(ModelRotation.getModelRotation(90, 0));
+    private final TRSRTransformation base_rotation_d = new TRSRTransformation(ModelRotation.getModelRotation(270, 0));
+    private final TRSRTransformation base_rotation_e = new TRSRTransformation(ModelRotation.getModelRotation(0, 270));
+    private final TRSRTransformation base_rotation_w = new TRSRTransformation(ModelRotation.getModelRotation(0, 90));
+    private final TRSRTransformation base_rotation_n = new TRSRTransformation(ModelRotation.getModelRotation(0, 180));
+
+    private IBakedModel getConnector(EnumFacing side, float scale, float offsetX, float offsetY)
+    {
+        final ModelHandle connector = ModelHandle.of(PIPE_CONNECTOR);
+
+        String key = "";
+        TRSRTransformation transform = TRSRTransformation.identity();
+
+        switch(side)
+        {
+            case UP   :key = "u"; transform = transform.compose(base_rotation_u); break;
+            case DOWN :key = "d"; transform = transform.compose(base_rotation_d); break;
+            case EAST :key = "e"; transform = transform.compose(base_rotation_e); break;
+            case WEST :key = "w"; transform = transform.compose(base_rotation_w); break;
+            case NORTH:key = "n"; transform = transform.compose(base_rotation_n); break;
+            case SOUTH:key = "s"; break;
+        }
+
+        transform = transform.compose(new TRSRTransformation(
+                new Vector3f(0.5f,0.5f,1.0f),
+                null,
+                null,
+                null));
+
+        transform = transform.compose(new TRSRTransformation(
+                null,
+                null,
+                new Vector3f(scale,scale,scale),
+                null));
+
+        transform = transform.compose(new TRSRTransformation(
+                new Vector3f(-0.5f,-0.5f,-1.0f),
+                null,
+                null,
+                null));
+
+        transform = transform.compose(new TRSRTransformation(
+                new Vector3f(offsetX, offsetY, 0f),
+                null,
+                null,
+                null));
+
+        return connector.state(String.format("%s%f%f%f",key,scale,offsetX,offsetY), transform).get();
+    }
 
     private final TextureAtlasSprite particle;
 
@@ -45,8 +104,45 @@ public class PipeBakedModel implements IBakedModel
         List<BakedQuad> quads = Lists.newArrayList();
 
         quads.addAll(handle_core.get().getQuads(state, side, rand));
+        if(state != null)
+        {
+            if (state.getValue(BlockPipe.UP)) quads.addAll(handle_side_u.get().getQuads(state, side, rand));
+            if (state.getValue(BlockPipe.DOWN)) quads.addAll(handle_side_d.get().getQuads(state, side, rand));
+            if (state.getValue(BlockPipe.EAST)) quads.addAll(handle_side_e.get().getQuads(state, side, rand));
+            if (state.getValue(BlockPipe.WEST)) quads.addAll(handle_side_w.get().getQuads(state, side, rand));
+            if (state.getValue(BlockPipe.NORTH)) quads.addAll(handle_side_n.get().getQuads(state, side, rand));
+            if (state.getValue(BlockPipe.SOUTH)) quads.addAll(handle_side_s.get().getQuads(state, side, rand));
+        }
 
-        // TODO: Show connected interfaces
+        int n = (int)(Math.abs(rand/257)%10);
+
+        int[] rows = new int[0];
+        switch(n)
+        {
+            case 0: break;
+            case 1: rows = new int[]{1}; break;
+            case 2: rows = new int[]{2}; break;
+            case 3: rows = new int[]{2,1}; break;
+            case 4: rows = new int[]{2,2}; break;
+            case 5: rows = new int[]{3,2}; break;
+            case 6: rows = new int[]{3,3}; break;
+            case 7: rows = new int[]{2,3,2}; break;
+            case 8: rows = new int[]{3,2,3}; break;
+            case 9: rows = new int[]{3,3,3}; break;
+        }
+
+        float oy = (rows.length-1)/2f;
+
+        for(int y=0;y<rows.length;y++)
+        {
+            int nw = rows[y];
+            float ox = (nw-1)/2f;
+
+            for(int x=0;x<nw;x++)
+            {
+                quads.addAll(getConnector(EnumFacing.UP, 0.35f, (x-ox)*0.7f, (y-oy)*0.7f).getQuads(state, side, rand));
+            }
+        }
 
         return quads;
     }
@@ -108,6 +204,8 @@ public class PipeBakedModel implements IBakedModel
         {
             List<ResourceLocation> dependencies = Lists.newArrayList();
             dependencies.add(PIPE_CORE);
+            dependencies.add(PIPE_SIDE);
+            dependencies.add(PIPE_CONNECTOR);
             return dependencies;
         }
 

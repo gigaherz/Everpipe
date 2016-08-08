@@ -31,7 +31,6 @@ public class BlockPipe extends BlockRegistered
     {
         super(name, Material.IRON, MapColor.GRAY);
         setSoundType(SoundType.METAL);
-        setUnlocalizedName(Everpipe.MODID + ".blockPipe");
         setCreativeTab(Everpipe.tabEverpipe);
         setDefaultState(blockState.getBaseState()
                 .withProperty(NORTH, false)

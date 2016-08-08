@@ -21,10 +21,13 @@ public class ClientProxy implements IModProxy
     {
         OBJLoader.INSTANCE.addDomain(Everpipe.MODID);
 
+        ModelHandle.init();
+
         ModelLoaderRegistry.registerLoader(new PipeBakedModel.ModelLoader());
-        //ModelLoader.setCustomStateMapper(Everpipe.pipe, new PipeBakedModel.Statemapper());
+        ModelLoader.setCustomStateMapper(Everpipe.pipe, new PipeBakedModel.Statemapper());
 
         registerBlockModelAsItem(Everpipe.pipe);
+
     }
 
     public void registerBlockModelAsItem(final Block block)
