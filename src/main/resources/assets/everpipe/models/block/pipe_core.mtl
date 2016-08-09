@@ -1,3 +1,5 @@
 # Rhino
 newmtl New material 001
-Kd 0.4118 0.4118 0.4118
+Kd 0.4667 0.4667 0.4667
+map_Kd everpipe:blocks/noise
+

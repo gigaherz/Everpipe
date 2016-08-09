@@ -1,25 +1,33 @@
 # Rhino
 newmtl New material 003
 Kd 0.0000 0.4980 0.0000
+map_Kd everpipe:blocks/noise
 
 newmtl New material 002
 Kd 0.0000 0.0000 1.0000
+map_Kd everpipe:blocks/noise
 
 newmtl New material 001
 Kd 0.4118 0.4118 0.4118
+map_Kd everpipe:blocks/noise
 
 newmtl New material 006
 Kd 0.5451 0.2706 0.0745
+map_Kd everpipe:blocks/noise
 
 newmtl New material 005
 Kd 0.7490 0.2471 1.0000
+map_Kd everpipe:blocks/noise
 
 newmtl New material 008
 Kd 1.0000 0.7490 0.0000
+map_Kd everpipe:blocks/noise
 
 newmtl New material 009
 Kd 0.6392 0.0157 0.0157
+map_Kd everpipe:blocks/noise
 
 newmtl New material 007
 Kd 0.2471 0.7490 0.7490
+map_Kd everpipe:blocks/noise
 

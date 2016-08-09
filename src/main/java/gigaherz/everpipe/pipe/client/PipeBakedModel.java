@@ -39,11 +39,11 @@ public class PipeBakedModel implements IBakedModel
     public static final ResourceLocation PIPE_CONNECTOR = Everpipe.location("block/pipe_connector.obj");
 
     private final ModelHandle handle_core = ModelHandle.of(PIPE_CORE);
-    private final ModelHandle handle_side_u = ModelHandle.of(PIPE_SIDE).state("u", new TRSRTransformation(ModelRotation.getModelRotation(90, 0)));
-    private final ModelHandle handle_side_d = ModelHandle.of(PIPE_SIDE).state("d", new TRSRTransformation(ModelRotation.getModelRotation(270, 0)));
-    private final ModelHandle handle_side_e = ModelHandle.of(PIPE_SIDE).state("e", new TRSRTransformation(ModelRotation.getModelRotation(0, 270)));
-    private final ModelHandle handle_side_w = ModelHandle.of(PIPE_SIDE).state("w", new TRSRTransformation(ModelRotation.getModelRotation(0, 90)));
-    private final ModelHandle handle_side_n = ModelHandle.of(PIPE_SIDE).state("n", new TRSRTransformation(ModelRotation.getModelRotation(0, 180)));
+    private final ModelHandle handle_side_u = ModelHandle.of(PIPE_SIDE).state(new TRSRTransformation(ModelRotation.getModelRotation(90, 0)));
+    private final ModelHandle handle_side_d = ModelHandle.of(PIPE_SIDE).state(new TRSRTransformation(ModelRotation.getModelRotation(270, 0)));
+    private final ModelHandle handle_side_e = ModelHandle.of(PIPE_SIDE).state(new TRSRTransformation(ModelRotation.getModelRotation(0, 270)));
+    private final ModelHandle handle_side_w = ModelHandle.of(PIPE_SIDE).state(new TRSRTransformation(ModelRotation.getModelRotation(0, 90)));
+    private final ModelHandle handle_side_n = ModelHandle.of(PIPE_SIDE).state(new TRSRTransformation(ModelRotation.getModelRotation(0, 180)));
     private final ModelHandle handle_side_s = ModelHandle.of(PIPE_SIDE);
 
     private final TRSRTransformation base_rotation_u = new TRSRTransformation(ModelRotation.getModelRotation(90, 0));
@@ -54,19 +54,18 @@ public class PipeBakedModel implements IBakedModel
 
     private IBakedModel getConnector(EnumFacing side, float scale, float offsetX, float offsetY)
     {
-        final ModelHandle connector = ModelHandle.of(PIPE_CONNECTOR);
+        final ModelHandle connector = ModelHandle.of(PIPE_CONNECTOR).uvLock(true);
 
-        String key = "";
         TRSRTransformation transform = TRSRTransformation.identity();
 
         switch(side)
         {
-            case UP   :key = "u"; transform = transform.compose(base_rotation_u); break;
-            case DOWN :key = "d"; transform = transform.compose(base_rotation_d); break;
-            case EAST :key = "e"; transform = transform.compose(base_rotation_e); break;
-            case WEST :key = "w"; transform = transform.compose(base_rotation_w); break;
-            case NORTH:key = "n"; transform = transform.compose(base_rotation_n); break;
-            case SOUTH:key = "s"; break;
+            case UP: transform = transform.compose(base_rotation_u); break;
+            case DOWN: transform = transform.compose(base_rotation_d); break;
+            case EAST: transform = transform.compose(base_rotation_e); break;
+            case WEST: transform = transform.compose(base_rotation_w); break;
+            case NORTH: transform = transform.compose(base_rotation_n); break;
+            case SOUTH: break;
         }
 
         transform = transform.compose(new TRSRTransformation(
@@ -93,7 +92,7 @@ public class PipeBakedModel implements IBakedModel
                 null,
                 null));
 
-        return connector.state(String.format("%s%f%f%f",key,scale,offsetX,offsetY), transform).get();
+        return connector.state(transform).get();
     }
 
     private final TextureAtlasSprite particle;

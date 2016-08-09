@@ -21,43 +21,114 @@ import net.minecraftforge.common.model.IModelState;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class ModelHandle
 {
     static Map<String, IBakedModel> loadedModels = Maps.newHashMap();
 
-    private ResourceLocation model;
-    private String key;
     private final Map<String, String> textureReplacements = Maps.newHashMap();
-    private VertexFormat vertexFormat = DefaultVertexFormats.ITEM;
-    private IModelState state;
+    private final ResourceLocation model;
+    private final String key;
+    private final VertexFormat vertexFormat;
+    private final IModelState state;
+    private final boolean uvLock;
+
 
     private ModelHandle(ResourceLocation model)
     {
         this.model = model;
-        this.key = model.toString();
+        this.vertexFormat = DefaultVertexFormats.ITEM;
+        this.state = null;
+        this.uvLock = false;
+        this.key = computeKey();
+    }
+
+    private ModelHandle(ModelHandle handle, String texChannel, String resloc)
+    {
+        this.model = handle.model;
+        this.vertexFormat = handle.vertexFormat;
+        this.state = handle.state;
+        this.uvLock = handle.uvLock;
+        textureReplacements.putAll(handle.textureReplacements);
+        textureReplacements.put(texChannel, resloc);
+        this.key = computeKey();
+    }
+
+    private ModelHandle(ModelHandle handle, VertexFormat fmt)
+    {
+        this.model = handle.model;
+        this.vertexFormat = fmt;
+        this.state = handle.state;
+        this.uvLock = handle.uvLock;
+        textureReplacements.putAll(handle.textureReplacements);
+        this.key = computeKey();
+    }
+
+    private ModelHandle(ModelHandle handle, IModelState state)
+    {
+        this.model = handle.model;
+        this.vertexFormat = handle.vertexFormat;
+        this.state = state;
+        this.uvLock = handle.uvLock;
+        textureReplacements.putAll(handle.textureReplacements);
+        this.key = computeKey();
+    }
+
+    private ModelHandle(ModelHandle handle, boolean uvLock)
+    {
+        this.model = handle.model;
+        this.vertexFormat = handle.vertexFormat;
+        this.state = handle.state;
+        this.uvLock = uvLock;
+        textureReplacements.putAll(handle.textureReplacements);
+        this.key = computeKey();
+    }
+
+    private String computeKey()
+    {
+        StringBuilder b = new StringBuilder();
+        b.append(model.toString());
+        for (Map.Entry<String, String> entry : textureReplacements.entrySet())
+        {
+            b.append("//");
+            b.append(entry.getKey());
+            b.append("/");
+            b.append(entry.getValue());
+        }
+        b.append("//VF:"); b.append(vertexFormat.hashCode());
+        b.append("//S:" ); b.append((state != null) ? state.hashCode() : "n");
+        b.append("//UVL:" ); b.append(uvLock);
+        return b.toString();
     }
 
     public ModelHandle replace(String texChannel, String resloc)
     {
-        key += "//" + texChannel + "/" + resloc;
-        textureReplacements.put(texChannel, resloc);
-        return this;
+        if (textureReplacements.containsKey(texChannel) && textureReplacements.get(texChannel).equals(resloc))
+            return this;
+        return new ModelHandle(this, texChannel, resloc);
     }
 
     public ModelHandle vertexFormat(VertexFormat fmt)
     {
-        key += "//VF:" + fmt.hashCode();
-        vertexFormat = fmt;
-        return this;
+        if (vertexFormat == fmt)
+            return this;
+        return new ModelHandle(this, fmt);
     }
 
-    public ModelHandle state(String statekey, IModelState newState)
+    public ModelHandle state(IModelState newState)
     {
-        key += "//state/" + statekey;
-        state = newState;
-        return this;
+        if (state == newState)
+            return this;
+        return new ModelHandle(this, newState);
+    }
+
+    public ModelHandle uvLock(boolean uvLock)
+    {
+        if (this.uvLock == uvLock)
+            return this;
+        return new ModelHandle(this, uvLock);
     }
 
     public ResourceLocation getModel()
@@ -80,9 +151,15 @@ public class ModelHandle
         return vertexFormat;
     }
 
+    @Nullable
     public IModelState getState()
     {
         return state;
+    }
+
+    public boolean uvLocked()
+    {
+        return uvLock;
     }
 
     public IBakedModel get()
@@ -160,6 +237,11 @@ public class ModelHandle
             {
                 IRetexturableModel rtm = (IRetexturableModel) mod;
                 mod = rtm.retexture(ImmutableMap.copyOf(handle.getTextureReplacements()));
+            }
+            if (handle.uvLocked() && mod instanceof IModelUVLock)
+            {
+                IModelUVLock uvl = (IModelUVLock) mod;
+                mod = uvl.uvlock(true);
             }
             IModelState state = handle.getState();
             if (state == null) state = mod.getDefaultState();
