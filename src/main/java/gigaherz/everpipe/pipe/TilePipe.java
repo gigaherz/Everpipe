@@ -8,6 +8,7 @@ import gigaherz.everpipe.pipe.connectors.ConnectorStateData;
 import gigaherz.everpipe.pipe.connectors.items.ItemHandlerConnector;
 import gigaherz.graph.api.Graph;
 import gigaherz.graph.api.GraphObject;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
@@ -42,11 +43,6 @@ public class TilePipe extends TileEntity implements ITickable, GraphObject
     }
 
     private final Multimap<EnumFacing, Connector> connectors = ArrayListMultimap.create();
-
-    public ConnectorStateData getConnectors()
-    {
-        return new ConnectorStateData(connectors);
-    }
 
     public boolean addConnector(EnumFacing side, Connector connector)
     {
@@ -139,23 +135,11 @@ public class TilePipe extends TileEntity implements ITickable, GraphObject
         return writeToNBT(new NBTTagCompound());
     }
 
-    @Override
-    public void handleUpdateTag(NBTTagCompound tag)
-    {
-        readFromNBT(tag);
-    }
-
     @Nullable
     @Override
     public SPacketUpdateTileEntity getUpdatePacket()
     {
         return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
-    {
-        handleUpdateTag(pkt.getNbtCompound());
     }
 
     @Override

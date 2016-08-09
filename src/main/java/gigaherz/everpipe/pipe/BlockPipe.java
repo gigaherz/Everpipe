@@ -105,9 +105,11 @@ public class BlockPipe extends BlockRegistered
     }
 
     @Override
-    public TilePipe createTileEntity(World world, IBlockState state)
+    public TileEntity createTileEntity(World world, IBlockState state)
     {
-        return new TilePipe();
+        return world.isRemote ?
+                new TilePipeClient() :
+                new TilePipe();
     }
 
     @Deprecated
@@ -135,9 +137,9 @@ public class BlockPipe extends BlockRegistered
     {
         IExtendedBlockState augmented = (IExtendedBlockState)super.getExtendedState(state, world, pos);
         TileEntity te = world.getTileEntity(pos);
-        if (te instanceof TilePipe)
+        if (te instanceof TilePipeClient)
         {
-            TilePipe pipe = (TilePipe)te;
+            TilePipeClient pipe = (TilePipeClient)te;
 
             augmented = augmented.withProperty(CONNECTORS, pipe.getConnectors());
         }
@@ -162,7 +164,7 @@ public class BlockPipe extends BlockRegistered
     {
         TileEntity te = worldIn.getTileEntity(pos.offset(facing));
 
-        return (te instanceof TilePipe);
+        return (te instanceof TilePipe) || (te instanceof TilePipeClient);
     }
 
     @Override
@@ -187,6 +189,9 @@ public class BlockPipe extends BlockRegistered
         TileEntity te = worldIn.getTileEntity(pos);
         if (te instanceof TilePipe)
         {
+            if (worldIn.isRemote)
+                return true;
+
             TilePipe pipe = (TilePipe)te;
 
             if (pipe.addConnector(side, ConnectorHandler.REGISTRY.getValue(ItemHandlerConnector.KEY).createInstance()))

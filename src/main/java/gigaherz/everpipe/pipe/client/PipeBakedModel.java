@@ -120,42 +120,63 @@ public class PipeBakedModel implements IBakedModel
             IExtendedBlockState extended = (IExtendedBlockState)state;
             ConnectorStateData data = extended.getValue(BlockPipe.CONNECTORS);
 
-            ImmutableMultimap<EnumFacing, ConnectorState> connectors = data.getConnectors();
-
-            for (EnumFacing side2 : EnumFacing.VALUES)
+            if (data != null)
             {
-                ImmutableCollection<ConnectorState> values = connectors.get(side2);
+                ImmutableMultimap<EnumFacing, ConnectorState> connectors = data.getConnectors();
 
-                int n = values.size();
-
-                int[] rows = new int[0];
-                switch(n)
+                for (EnumFacing side2 : EnumFacing.VALUES)
                 {
-                    case 0: break;
-                    case 1: rows = new int[]{1}; break;
-                    case 2: rows = new int[]{2}; break;
-                    case 3: rows = new int[]{2,1}; break;
-                    case 4: rows = new int[]{2,2}; break;
-                    case 5: rows = new int[]{3,2}; break;
-                    case 6: rows = new int[]{3,3}; break;
-                    case 7: rows = new int[]{2,3,2}; break;
-                    case 8: rows = new int[]{3,2,3}; break;
-                    case 9: rows = new int[]{3,3,3}; break;
-                }
+                    ImmutableCollection<ConnectorState> values = connectors.get(side2);
 
-                float oy = (rows.length-1)/2f;
+                    int n = values.size();
 
-                for(int y=0;y<rows.length;y++)
-                {
-                    int nw = rows[y];
-                    float ox = (nw-1)/2f;
-
-                    for(int x=0;x<nw;x++)
+                    int[] rows = new int[0];
+                    switch (n)
                     {
-                        quads.addAll(getConnector(side2, 0.35f, (x-ox)*0.7f, (y-oy)*0.7f).getQuads(state, side, rand));
+                        case 0:
+                            break;
+                        case 1:
+                            rows = new int[]{1};
+                            break;
+                        case 2:
+                            rows = new int[]{2};
+                            break;
+                        case 3:
+                            rows = new int[]{2, 1};
+                            break;
+                        case 4:
+                            rows = new int[]{2, 2};
+                            break;
+                        case 5:
+                            rows = new int[]{3, 2};
+                            break;
+                        case 6:
+                            rows = new int[]{3, 3};
+                            break;
+                        case 7:
+                            rows = new int[]{2, 3, 2};
+                            break;
+                        case 8:
+                            rows = new int[]{3, 2, 3};
+                            break;
+                        case 9:
+                            rows = new int[]{3, 3, 3};
+                            break;
+                    }
+
+                    float oy = (rows.length - 1) / 2f;
+
+                    for (int y = 0; y < rows.length; y++)
+                    {
+                        int nw = rows[y];
+                        float ox = (nw - 1) / 2f;
+
+                        for (int x = 0; x < nw; x++)
+                        {
+                            quads.addAll(getConnector(side2, 0.35f, (x - ox) * 0.7f, (y - oy) * 0.7f).getQuads(state, side, rand));
+                        }
                     }
                 }
-
             }
         }
 

@@ -18,4 +18,5 @@ public abstract class ConnectorHandler extends IForgeRegistryEntry.Impl<Connecto
     }
 
     public abstract Connector createInstance();
+    public abstract ConnectorState createStateInstance();
 }

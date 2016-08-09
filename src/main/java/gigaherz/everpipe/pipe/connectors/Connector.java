@@ -3,27 +3,18 @@ package gigaherz.everpipe.pipe.connectors;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
-public abstract class Connector implements ICapabilitySerializable<NBTTagCompound>
+public abstract class Connector extends ConnectorState implements ICapabilitySerializable<NBTTagCompound>
 {
-    private final ConnectorHandler connectorHandler;
-
-    protected Connector(ConnectorHandler connectorType)
+    protected Connector(ConnectorHandler handler)
     {
-        this.connectorHandler = connectorType;
-    }
-
-    public abstract ConnectorState getImmutableState();
-
-    public ConnectorHandler getConnectorHandler()
-    {
-        return connectorHandler;
+        super(handler);
     }
 
     @Override
     public NBTTagCompound serializeNBT()
     {
         NBTTagCompound compound = new NBTTagCompound();
-        compound.setString("Handler", connectorHandler.getRegistryName().toString());
+        compound.setString("Handler", getConnectorHandler().getRegistryName().toString());
         return compound;
     }
 

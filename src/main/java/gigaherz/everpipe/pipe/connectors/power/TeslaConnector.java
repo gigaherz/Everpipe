@@ -1,4 +1,4 @@
-package gigaherz.everpipe.pipe.connectors.items;
+package gigaherz.everpipe.pipe.connectors.power;
 
 import gigaherz.everpipe.Everpipe;
 import gigaherz.everpipe.pipe.connectors.Connector;
@@ -11,11 +11,11 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
 
-public class ItemHandlerConnector extends Connector
+public class TeslaConnector extends Connector
 {
-    public static final ResourceLocation KEY = Everpipe.location("item_handler");
+    public static final ResourceLocation KEY = Everpipe.location("tesla");
 
-    protected ItemHandlerConnector(ConnectorHandler connectorType)
+    protected TeslaConnector(ConnectorHandler connectorType)
     {
         super(connectorType);
     }
@@ -64,7 +64,7 @@ public class ItemHandlerConnector extends Connector
             super(copyFrom.getConnectorHandler());
         }
 
-        public State(ConnectorHandler connectorHandler, ItemHandlerConnector copyFrom)
+        public State(ConnectorHandler connectorHandler, TeslaConnector copyFrom)
         {
             super(connectorHandler);
         }
@@ -92,7 +92,7 @@ public class ItemHandlerConnector extends Connector
         @Override
         public Connector createInstance()
         {
-            return new ItemHandlerConnector(this);
+            return new TeslaConnector(this);
         }
 
         @Override
