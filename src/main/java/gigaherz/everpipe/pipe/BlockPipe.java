@@ -1,7 +1,7 @@
 package gigaherz.everpipe.pipe;
 
+import gigaherz.common.BlockRegistered;
 import gigaherz.everpipe.Everpipe;
-import gigaherz.everpipe.common.BlockRegistered;
 import gigaherz.everpipe.pipe.connectors.Connector;
 import gigaherz.everpipe.pipe.connectors.ConnectorHandler;
 import gigaherz.everpipe.pipe.connectors.ConnectorStateData;

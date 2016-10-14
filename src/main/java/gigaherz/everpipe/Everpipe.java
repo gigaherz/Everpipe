@@ -1,7 +1,7 @@
 package gigaherz.everpipe;
 
 import gigaherz.capabilities.api.energy.CapabilityEnergy;
-import gigaherz.everpipe.common.BlockRegistered;
+import gigaherz.common.BlockRegistered;
 import gigaherz.everpipe.common.ConfigValues;
 import gigaherz.everpipe.common.GuiHandler;
 import gigaherz.everpipe.common.IModProxy;

@@ -1,5 +1,6 @@
 package gigaherz.everpipe.client;
 
+import gigaherz.common.client.ModelHandle;
 import gigaherz.everpipe.Everpipe;
 import gigaherz.everpipe.common.ContainerBase;
 import gigaherz.everpipe.common.IModProxy;

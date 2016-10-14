@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import gigaherz.everpipe.Everpipe;
-import gigaherz.everpipe.client.ModelHandle;
+import gigaherz.common.client.ModelHandle;
 import gigaherz.everpipe.pipe.BlockPipe;
 import gigaherz.everpipe.pipe.connectors.ConnectorState;
 import gigaherz.everpipe.pipe.connectors.ConnectorStateData;
