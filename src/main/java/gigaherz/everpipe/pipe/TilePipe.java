@@ -1,17 +1,15 @@
 package gigaherz.everpipe.pipe;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import gigaherz.everpipe.Everpipe;
 import gigaherz.everpipe.pipe.connectors.Connector;
 import gigaherz.everpipe.pipe.connectors.ConnectorHandler;
-import gigaherz.everpipe.pipe.connectors.ConnectorStateData;
-import gigaherz.everpipe.pipe.connectors.items.ItemHandlerConnector;
 import gigaherz.graph.api.Graph;
 import gigaherz.graph.api.GraphObject;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -58,7 +56,7 @@ public class TilePipe extends TileEntity implements ITickable, GraphObject
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
-        if(facing != null)
+        if (facing != null)
         {
             return connectors.get(facing).stream()
                     .anyMatch(c -> c.hasCapability(capability, facing));
@@ -69,7 +67,7 @@ public class TilePipe extends TileEntity implements ITickable, GraphObject
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-        if(facing != null)
+        if (facing != null)
         {
             return connectors.get(facing).stream()
                     .filter(c -> c.hasCapability(capability, facing))
@@ -86,7 +84,7 @@ public class TilePipe extends TileEntity implements ITickable, GraphObject
 
         connectors.clear();
         NBTTagList list = compound.getTagList("Connectors", Constants.NBT.TAG_COMPOUND);
-        for(int i=0;i<list.tagCount();i++)
+        for (int i = 0; i < list.tagCount(); i++)
         {
             NBTTagCompound tag = list.getCompoundTagAt(i);
             EnumFacing side = EnumFacing.byName(tag.getString("Side"));
@@ -105,7 +103,7 @@ public class TilePipe extends TileEntity implements ITickable, GraphObject
             }
             Connector conn = handler.createInstance();
             conn.deserializeNBT(tag);
-            connectors.put(side,conn);
+            connectors.put(side, conn);
         }
     }
 
@@ -116,7 +114,7 @@ public class TilePipe extends TileEntity implements ITickable, GraphObject
 
         NBTTagList list = new NBTTagList();
 
-        for(Map.Entry<EnumFacing, Connector> entry : connectors.entries())
+        for (Map.Entry<EnumFacing, Connector> entry : connectors.entries())
         {
             NBTTagCompound tag = entry.getValue().serializeNBT();
 
@@ -182,7 +180,7 @@ public class TilePipe extends TileEntity implements ITickable, GraphObject
         List<GraphObject> neighbours = Lists.newArrayList();
         for (EnumFacing f : EnumFacing.VALUES)
         {
-            TileEntity teOther = worldObj.getTileEntity(pos.offset(f));
+            TileEntity teOther = world.getTileEntity(pos.offset(f));
             if (!(teOther instanceof TilePipe))
                 continue;
             GraphObject thingOther = ((TilePipe) teOther);

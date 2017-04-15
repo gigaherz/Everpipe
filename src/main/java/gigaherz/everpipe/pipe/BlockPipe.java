@@ -2,7 +2,6 @@ package gigaherz.everpipe.pipe;
 
 import gigaherz.common.BlockRegistered;
 import gigaherz.everpipe.Everpipe;
-import gigaherz.everpipe.pipe.connectors.Connector;
 import gigaherz.everpipe.pipe.connectors.ConnectorHandler;
 import gigaherz.everpipe.pipe.connectors.ConnectorStateData;
 import gigaherz.everpipe.pipe.connectors.items.ItemHandlerConnector;
@@ -15,7 +14,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -27,11 +25,9 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
-import javax.annotation.Nullable;
-
 public class BlockPipe extends BlockRegistered
 {
-    public static final AxisAlignedBB AABB = new AxisAlignedBB(2/16.0f,2/16.0f,2/16.0f,14/16.0f,14/16.0f,14/16.0f);
+    public static final AxisAlignedBB AABB = new AxisAlignedBB(2 / 16.0f, 2 / 16.0f, 2 / 16.0f, 14 / 16.0f, 14 / 16.0f, 14 / 16.0f);
 
     public static final PropertyBool NORTH = PropertyBool.create("north");
     public static final PropertyBool SOUTH = PropertyBool.create("south");
@@ -42,10 +38,25 @@ public class BlockPipe extends BlockRegistered
 
     public static final IUnlistedProperty<ConnectorStateData> CONNECTORS = new IUnlistedProperty<ConnectorStateData>()
     {
-        public String getName() { return Everpipe.location("connectors_property").toString(); }
-        public boolean isValid(ConnectorStateData state) { return true; }
-        public Class<ConnectorStateData> getType() { return ConnectorStateData.class; }
-        public String valueToString(ConnectorStateData state) { return state.toString(); }
+        public String getName()
+        {
+            return Everpipe.location("connectors_property").toString();
+        }
+
+        public boolean isValid(ConnectorStateData state)
+        {
+            return true;
+        }
+
+        public Class<ConnectorStateData> getType()
+        {
+            return ConnectorStateData.class;
+        }
+
+        public String valueToString(ConnectorStateData state)
+        {
+            return state.toString();
+        }
     };
 
     public BlockPipe(String name)
@@ -135,11 +146,11 @@ public class BlockPipe extends BlockRegistered
     @Override
     public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
     {
-        IExtendedBlockState augmented = (IExtendedBlockState)super.getExtendedState(state, world, pos);
+        IExtendedBlockState augmented = (IExtendedBlockState) super.getExtendedState(state, world, pos);
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof TilePipeClient)
         {
-            TilePipeClient pipe = (TilePipeClient)te;
+            TilePipeClient pipe = (TilePipeClient) te;
 
             augmented = augmented.withProperty(CONNECTORS, pipe.getConnectors());
         }
@@ -173,18 +184,17 @@ public class BlockPipe extends BlockRegistered
         return new ExtendedBlockState(this, new IProperty[]{NORTH, SOUTH, WEST, EAST, UP, DOWN}, new IUnlistedProperty[]{CONNECTORS});
     }
 
-    @Deprecated
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
-        super.neighborChanged(state, worldIn, pos, blockIn);
+        super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
         TileEntity te = worldIn.getTileEntity(pos);
         if (te != null)
             te.markDirty();
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         TileEntity te = worldIn.getTileEntity(pos);
         if (te instanceof TilePipe)
@@ -192,16 +202,16 @@ public class BlockPipe extends BlockRegistered
             if (worldIn.isRemote)
                 return true;
 
-            TilePipe pipe = (TilePipe)te;
+            TilePipe pipe = (TilePipe) te;
 
-            if (pipe.addConnector(side, ConnectorHandler.REGISTRY.getValue(ItemHandlerConnector.KEY).createInstance()))
+            if (pipe.addConnector(facing, ConnectorHandler.REGISTRY.getValue(ItemHandlerConnector.KEY).createInstance()))
             {
                 worldIn.notifyBlockUpdate(pos, state, state, 3);
             }
 
             return true;
         }
-        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
     }
 
     @Override

@@ -28,7 +28,6 @@ public class ClientProxy implements IModProxy
         ModelLoader.setCustomStateMapper(Everpipe.pipe, new PipeBakedModel.Statemapper());
 
         registerBlockModelAsItem(Everpipe.pipe);
-
     }
 
     public void registerBlockModelAsItem(final Block block)
@@ -62,7 +61,7 @@ public class ClientProxy implements IModProxy
     {
         Minecraft gameController = Minecraft.getMinecraft();
 
-        EntityPlayer entityplayer = gameController.thePlayer;
+        EntityPlayer entityplayer = gameController.player;
 
         if (entityplayer.openContainer != null && entityplayer.openContainer.windowId == message.windowId)
         {

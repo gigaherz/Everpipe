@@ -18,5 +18,6 @@ public abstract class ConnectorState
     }
 
     public abstract ConnectorState immutableCopy();
+
     public abstract void deserializeNBT(NBTTagCompound compound);
 }

@@ -18,7 +18,7 @@ public class ConnectorStateData
     public ConnectorStateData(Multimap<EnumFacing, ConnectorState> connectors)
     {
         ImmutableMultimap.Builder<EnumFacing, ConnectorState> builder = ImmutableMultimap.<EnumFacing, ConnectorState>builder();
-        for(Map.Entry<EnumFacing,ConnectorState> entry : connectors.entries())
+        for (Map.Entry<EnumFacing, ConnectorState> entry : connectors.entries())
         {
             builder.put(entry.getKey(), entry.getValue().immutableCopy());
         }

@@ -8,9 +8,10 @@ import gigaherz.everpipe.common.IModProxy;
 import gigaherz.everpipe.network.UpdateField;
 import gigaherz.everpipe.pipe.BlockPipe;
 import gigaherz.everpipe.pipe.TilePipe;
+import gigaherz.everpipe.pipe.connectors.ConnectorHandler;
 import gigaherz.everpipe.pipe.connectors.items.ItemHandlerConnector;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
@@ -21,12 +22,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.fml.common.registry.RegistryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Everpipe.MODID,
-     version = Everpipe.VERSION)
+        version = Everpipe.VERSION)
 public class Everpipe
 {
     public static final String MODID = "everpipe";
@@ -38,9 +41,9 @@ public class Everpipe
     public static CreativeTabs tabEverpipe = new CreativeTabs("tabEverpipe")
     {
         @Override
-        public Item getTabIconItem()
+        public ItemStack getTabIconItem()
         {
-            return Item.getItemFromBlock(pipe);
+            return new ItemStack(pipe);
         }
     };
 
@@ -55,6 +58,17 @@ public class Everpipe
     private GuiHandler guiHandler = new GuiHandler();
 
     public static final Logger logger = LogManager.getLogger(MODID);
+
+    public static final IForgeRegistry<ConnectorHandler> CONNECTOR_HANDLERS;
+
+    static
+    {
+        CONNECTOR_HANDLERS = new RegistryBuilder<ConnectorHandler>()
+                .setType(ConnectorHandler.class)
+                .setIDRange(0, 65535)
+                .setName(Everpipe.location("connector_handler_registry"))
+                .create();
+    }
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)

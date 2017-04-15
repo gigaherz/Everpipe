@@ -32,7 +32,7 @@ public class TilePipeClient extends TileEntity
 
         connectors.clear();
         NBTTagList list = compound.getTagList("Connectors", Constants.NBT.TAG_COMPOUND);
-        for(int i=0;i<list.tagCount();i++)
+        for (int i = 0; i < list.tagCount(); i++)
         {
             NBTTagCompound tag = list.getCompoundTagAt(i);
             EnumFacing side = EnumFacing.byName(tag.getString("Side"));
@@ -51,7 +51,7 @@ public class TilePipeClient extends TileEntity
             }
             ConnectorState conn = handler.createStateInstance();
             conn.deserializeNBT(tag);
-            connectors.put(side,conn);
+            connectors.put(side, conn);
         }
     }
 
@@ -66,8 +66,7 @@ public class TilePipeClient extends TileEntity
     {
         handleUpdateTag(pkt.getNbtCompound());
 
-        IBlockState state = worldObj.getBlockState(pos);
-        worldObj.notifyBlockUpdate(pos, state, state, 3);
+        IBlockState state = world.getBlockState(pos);
+        world.notifyBlockUpdate(pos, state, state, 3);
     }
-
 }

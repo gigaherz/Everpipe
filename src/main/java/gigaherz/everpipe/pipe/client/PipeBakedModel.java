@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
-import gigaherz.everpipe.Everpipe;
 import gigaherz.common.client.ModelHandle;
+import gigaherz.everpipe.Everpipe;
 import gigaherz.everpipe.pipe.BlockPipe;
 import gigaherz.everpipe.pipe.connectors.ConnectorState;
 import gigaherz.everpipe.pipe.connectors.ConnectorStateData;
@@ -58,18 +58,29 @@ public class PipeBakedModel implements IBakedModel
 
         TRSRTransformation transform = TRSRTransformation.identity();
 
-        switch(side)
+        switch (side)
         {
-            case UP: transform = transform.compose(base_rotation_u); break;
-            case DOWN: transform = transform.compose(base_rotation_d); break;
-            case EAST: transform = transform.compose(base_rotation_e); break;
-            case WEST: transform = transform.compose(base_rotation_w); break;
-            case NORTH: transform = transform.compose(base_rotation_n); break;
-            case SOUTH: break;
+            case UP:
+                transform = transform.compose(base_rotation_u);
+                break;
+            case DOWN:
+                transform = transform.compose(base_rotation_d);
+                break;
+            case EAST:
+                transform = transform.compose(base_rotation_e);
+                break;
+            case WEST:
+                transform = transform.compose(base_rotation_w);
+                break;
+            case NORTH:
+                transform = transform.compose(base_rotation_n);
+                break;
+            case SOUTH:
+                break;
         }
 
         transform = transform.compose(new TRSRTransformation(
-                new Vector3f(0.5f,0.5f,1.0f),
+                new Vector3f(0.5f, 0.5f, 1.0f),
                 null,
                 null,
                 null));
@@ -77,11 +88,11 @@ public class PipeBakedModel implements IBakedModel
         transform = transform.compose(new TRSRTransformation(
                 null,
                 null,
-                new Vector3f(scale,scale,scale),
+                new Vector3f(scale, scale, scale),
                 null));
 
         transform = transform.compose(new TRSRTransformation(
-                new Vector3f(-0.5f,-0.5f,-1.0f),
+                new Vector3f(-0.5f, -0.5f, -1.0f),
                 null,
                 null,
                 null));
@@ -108,7 +119,7 @@ public class PipeBakedModel implements IBakedModel
         List<BakedQuad> quads = Lists.newArrayList();
 
         quads.addAll(handle_core.get().getQuads(state, side, rand));
-        if(state != null)
+        if (state != null)
         {
             if (state.getValue(BlockPipe.UP)) quads.addAll(handle_side_u.get().getQuads(state, side, rand));
             if (state.getValue(BlockPipe.DOWN)) quads.addAll(handle_side_d.get().getQuads(state, side, rand));
@@ -117,7 +128,7 @@ public class PipeBakedModel implements IBakedModel
             if (state.getValue(BlockPipe.NORTH)) quads.addAll(handle_side_n.get().getQuads(state, side, rand));
             if (state.getValue(BlockPipe.SOUTH)) quads.addAll(handle_side_s.get().getQuads(state, side, rand));
 
-            IExtendedBlockState extended = (IExtendedBlockState)state;
+            IExtendedBlockState extended = (IExtendedBlockState) state;
             ConnectorStateData data = extended.getValue(BlockPipe.CONNECTORS);
 
             if (data != null)
@@ -280,7 +291,7 @@ public class PipeBakedModel implements IBakedModel
         @Override
         public boolean accepts(ResourceLocation modelLocation)
         {
-            if(!modelLocation.getResourceDomain().equals(Everpipe.MODID))
+            if (!modelLocation.getResourceDomain().equals(Everpipe.MODID))
                 return false;
             return modelLocation.equals(FAKE_LOCATION);
         }
