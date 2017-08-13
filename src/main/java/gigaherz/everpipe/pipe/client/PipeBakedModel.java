@@ -1,6 +1,5 @@
 package gigaherz.everpipe.pipe.client;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
@@ -20,7 +19,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.IRetexturableModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -30,6 +28,7 @@ import javax.vecmath.Vector3f;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public class PipeBakedModel implements IBakedModel
 {
@@ -231,7 +230,7 @@ public class PipeBakedModel implements IBakedModel
         return null;
     }
 
-    public static class Model implements IModel, IRetexturableModel
+    public static class Model implements IModel
     {
         @Nullable
         private final ResourceLocation particle;
@@ -268,7 +267,8 @@ public class PipeBakedModel implements IBakedModel
         public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
         {
             TextureAtlasSprite part = null;
-            if (particle != null) part = bakedTextureGetter.apply(particle);
+            if (particle != null)
+                part = bakedTextureGetter.apply(particle);
             return new PipeBakedModel(part);
         }
 

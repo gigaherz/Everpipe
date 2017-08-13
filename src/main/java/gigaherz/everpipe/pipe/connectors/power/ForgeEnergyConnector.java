@@ -12,11 +12,11 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
 
-public class TeslaConnector extends Connector
+public class ForgeEnergyConnector extends Connector
 {
-    public static final ResourceLocation KEY = Everpipe.location("tesla");
+    public static final ResourceLocation KEY = Everpipe.location("forge_energy");
 
-    protected TeslaConnector(ConnectorHandler connectorType)
+    protected ForgeEnergyConnector(ConnectorHandler connectorType)
     {
         super(connectorType, ChannelType.Power);
     }
@@ -65,7 +65,7 @@ public class TeslaConnector extends Connector
             super(copyFrom.getConnectorHandler());
         }
 
-        public State(ConnectorHandler connectorHandler, TeslaConnector copyFrom)
+        public State(ConnectorHandler connectorHandler, ForgeEnergyConnector copyFrom)
         {
             super(connectorHandler);
         }
@@ -93,7 +93,7 @@ public class TeslaConnector extends Connector
         @Override
         public Connector createInstance()
         {
-            return new TeslaConnector(this);
+            return new ForgeEnergyConnector(this);
         }
 
         @Override

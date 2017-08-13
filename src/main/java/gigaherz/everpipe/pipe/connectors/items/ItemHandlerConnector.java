@@ -1,6 +1,7 @@
 package gigaherz.everpipe.pipe.connectors.items;
 
 import gigaherz.everpipe.Everpipe;
+import gigaherz.everpipe.pipe.channels.ChannelType;
 import gigaherz.everpipe.pipe.connectors.Connector;
 import gigaherz.everpipe.pipe.connectors.ConnectorHandler;
 import gigaherz.everpipe.pipe.connectors.ConnectorState;
@@ -17,7 +18,7 @@ public class ItemHandlerConnector extends Connector
 
     protected ItemHandlerConnector(ConnectorHandler connectorType)
     {
-        super(connectorType);
+        super(connectorType, ChannelType.Items);
     }
 
     @Override

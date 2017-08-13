@@ -1,8 +1,8 @@
 package gigaherz.everpipe.pipe.connectors;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public abstract class ConnectorHandler extends IForgeRegistryEntry.Impl<ConnectorHandler>
 {

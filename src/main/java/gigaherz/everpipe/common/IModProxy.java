@@ -4,9 +4,5 @@ import gigaherz.everpipe.network.UpdateField;
 
 public interface IModProxy
 {
-    void preInit();
-
-    void init();
-
-    void handleUpdateField(UpdateField message);
+    default void handleUpdateField(UpdateField message) {}
 }
